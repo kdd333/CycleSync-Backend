@@ -36,7 +36,12 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']   # change this to your domain or IP address in production
+ALLOWED_HOSTS = [
+    'cyclesync-backend-production.up.railway.app', 
+    'localhost', 
+    '127.0.0.1'
+]
+
 
 
 # Application definition
