@@ -9,6 +9,7 @@ def create_superuser(apps, schema_editor):
     user_manager.create_superuser(
         email='khadijahdarragi2003@gmail.com',
         password='edcsdf4321',
+        name='Khadijah Darragi',
     )
 
 class Migration(migrations.Migration):
