@@ -12,7 +12,7 @@ urlpatterns = [
     path('exercises/', ExerciseListView.as_view(), name='exercises'),
     path('workout-logs/', WorkoutLogView.as_view(), name='workout_logs'),
     path('cycles/', CycleListView.as_view(), name='cycles'),
-    path('log-period/<date>/', LogPeriodView.as_view(), name='log_period'),
+    path('log-period/', LogPeriodView.as_view(), name='log_period'),
     path('period-dates/', PeriodDatesView.as_view(), name='period_dates'),
     path('cycle-data/', CurrentCycleView.as_view(), name='cycle_data'),  
 ]
