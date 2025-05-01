@@ -1,4 +1,6 @@
 frontend/
+CycleSyncFrontend/
+cyclesyncfrontend/
 venv/
 __pycache__/
 *.pyc
