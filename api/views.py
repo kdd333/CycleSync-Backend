@@ -329,6 +329,7 @@ class LogPeriodView(APIView):
     def post(self, request):
         """Log a period for the authenticated user"""
         user = request.user
+        method = request.data.get('method')
         date_str = request.data.get('date')
         
         if not date_str:
@@ -340,46 +341,65 @@ class LogPeriodView(APIView):
         except ValueError:
             return Response({"error": "Invalid date format. use YYYY-MM-DD."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # check if the user has an existing cycle that includes this date
-        current_cycle = Cycle.objects.filter(user=user, start_date__lte=date).order_by('-start_date').first()
+        if method == 'post':
+            # check if the user has an existing cycle that includes this date
+            current_cycle = Cycle.objects.filter(user=user, start_date__lte=date).order_by('-start_date').first()
 
-        if current_cycle and date <= current_cycle.start_date + timedelta(days=current_cycle.cycle_length - 1):
-            # Existing cycle: Create a CycleLog for the Menstrual Phase
-            menstrual_phase = current_cycle.phases.filter(phase__name='Menstrual').first()
-            if not menstrual_phase:
-                return Response({"error": "No Menstrual phase found for the current cycle"}, status=status.HTTP_400_BAD_REQUEST)
+            if current_cycle and date <= current_cycle.start_date + timedelta(days=current_cycle.cycle_length - 1):
+                # Existing cycle: Create a CycleLog for the Menstrual Phase
+                menstrual_phase = current_cycle.phases.filter(phase__name='Menstrual').first()
+                if not menstrual_phase:
+                    return Response({"error": "No Menstrual phase found for the current cycle"}, status=status.HTTP_400_BAD_REQUEST)
+                
+                CycleLog.objects.create(cycle_phase=menstrual_phase, date=date)
+                return Response({"message": "Period logged successfully"}, status=status.HTTP_201_CREATED)
             
-            CycleLog.objects.create(cycle_phase=menstrual_phase, date=date)
-            return Response({"message": "Period logged successfully"}, status=status.HTTP_201_CREATED)
+            # No existing cycle: Create a new cycle and cyclephases
+            cycle = Cycle.objects.create(user=user, start_date = date)
+
+            # set the cycle length based on the user cycle length variables
+            menstrual_length = user.menstrual_length
+            follicular_length = user.follicular_length
+            ovulation_length = user.ovulation_length
+            luteal_length = user.luteal_length
+
+            phases = [
+                ("Menstrual", menstrual_length),
+                ("Follicular", follicular_length),
+                ("Ovulatory", ovulation_length),
+                ("Luteal", luteal_length),
+            ]   
+
+            start_date = date
+            for phase_name, length in phases:
+                end_date = start_date + timedelta(days=length - 1)
+                phase = Phase.objects.get(name=phase_name)
+                CyclePhase.objects.create(cycle=cycle, phase=phase, start_date=start_date, end_date=end_date)
+                start_date = end_date + timedelta(days=1)
         
-        # No existing cycle: Create a new cycle and cyclephases
-        cycle = Cycle.objects.create(user=user, start_date = date)
+            # Create a CycleLog for the Menstrual Phase
+            menstrual_phase = cycle.phases.filter(phase__name='Menstrual').first()
+            CycleLog.objects.create(cycle_phase=menstrual_phase, date=date)
 
-        # set the cycle length based on the user cycle length variables
-        menstrual_length = user.menstrual_length
-        follicular_length = user.follicular_length
-        ovulation_length = user.ovulation_length
-        luteal_length = user.luteal_length
+            return Response({"message": "New cycle created and period logged successfully"}, status=status.HTTP_201_CREATED)
+        
+        if method == 'delete':
+            try:
+                # Find the CycleLog for the given date and delete it
+                log = CycleLog.objects.get(cycle_phase__cycle__user=user, date=date)
+                cycle = log.cycle_phase.cycle
 
-        phases = [
-            ("Menstrual", menstrual_length),
-            ("Follicular", follicular_length),
-            ("Ovulatory", ovulation_length),
-            ("Luteal", luteal_length),
-        ]   
+                if cycle.start_date == date:
+                    # If CycleLog's date matches start date of the cycle, delete Cycle & associated CyclePhases
+                    cycle.delete()
+                    return Response({"message": "Cycle and period log deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+                else:
+                    # If it's not the start date, just delete the CycleLog
+                    log.delete()
+                    return Response({"message": "Period log deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+            except CycleLog.DoesNotExist:
+                return Response({"error": "Period log not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        start_date = date
-        for phase_name, length in phases:
-            end_date = start_date + timedelta(days=length - 1)
-            phase = Phase.objects.get(name=phase_name)
-            CyclePhase.objects.create(cycle=cycle, phase=phase, start_date=start_date, end_date=end_date)
-            start_date = end_date + timedelta(days=1)
-    
-        # Create a CycleLog for the Menstrual Phase
-        menstrual_phase = cycle.phases.filter(phase__name='Menstrual').first()
-        CycleLog.objects.create(cycle_phase=menstrual_phase, date=date)
-
-        return Response({"message": "New cycle created and period logged successfully"}, status=status.HTTP_201_CREATED)
 
     def delete(self, request):
         """Delete a period log for the user"""
