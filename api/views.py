@@ -403,6 +403,8 @@ class LogPeriodView(APIView):
             log = CycleLog.objects.get(cycle_phase__cycle__user=user, date=date_obj)
             cycle = log.cycle_phase.cycle
 
+            print(f"CycleLog found for date: {date_obj}")
+            
             if cycle.start_date == date_obj:
                 # If CycleLog's date matches start date of the cycle, delete Cycle & associated CyclePhases
                 cycle.delete()
@@ -415,6 +417,10 @@ class LogPeriodView(APIView):
                 return Response({"message": "Period log deleted successfully"}, status=status.HTTP_200_OK)
         except CycleLog.DoesNotExist:
             return Response({"error": "Period log not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            # Catch any other unexpected errors
+            print(f"Unexpected error while deleting period log: {e}")
+            return Response({"error": "An unexpected error occurred while deleting the period log."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class CurrentCycleView(APIView):
