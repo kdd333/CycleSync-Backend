@@ -396,6 +396,8 @@ class LogPeriodView(APIView):
         except ValueError:
             return Response({"error": "Invalid date format. use YYYY-MM-DD."}, status=status.HTTP_400_BAD_REQUEST)
         
+        print(f"Now Attempting to delete period log for date: {date_obj}")
+
         try:
             # Find the CycleLog for the given date and delete it
             log = CycleLog.objects.get(cycle_phase__cycle__user=user, date=date_obj)
@@ -404,11 +406,13 @@ class LogPeriodView(APIView):
             if cycle.start_date == date_obj:
                 # If CycleLog's date matches start date of the cycle, delete Cycle & associated CyclePhases
                 cycle.delete()
-                return Response({"message": "Cycle and period log deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+                return Response({"message": "Cycle and period log deleted successfully"}, status=status.HTTP_200_OK)
             else:
                 # If it's not the start date, just delete the CycleLog
+                print(f"Deleting CycleLog for date: {date_obj}")
                 log.delete()
-                return Response({"message": "Period log deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+                print(f"Successfully Deleted CycleLog for date: {date_obj}")
+                return Response({"message": "Period log deleted successfully"}, status=status.HTTP_200_OK)
         except CycleLog.DoesNotExist:
             return Response({"error": "Period log not found"}, status=status.HTTP_404_NOT_FOUND)
 
