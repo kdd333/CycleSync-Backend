@@ -34,7 +34,7 @@ if not SECRET_KEY:
     raise ValueError("No SECRET_KEY set for Django. Please set the SECRET_KEY environment variable.")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'cyclesync-backend-production.up.railway.app', 
