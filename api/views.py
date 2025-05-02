@@ -310,6 +310,37 @@ class WorkoutLogView(APIView):
             return Response({"error": "Workout log not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
+class DeleteWorkoutLogView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, date):
+        """Delete a specific workout log for the authenticated user"""
+        print(f"Attempting to delete workout log for date: {date}")
+
+        date_str = date
+        
+        if not date_str:
+            return Response({"error": "Date is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Convert date string to a datetime.date object
+            date_obj = Date.fromisoformat(date_str)
+        except ValueError:
+            return Response({"error": "Invalid date format. use YYYY-MM-DD."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            print(f"Now Attempting to delete workout log for date: {date_obj}")
+            workout_log = WorkoutLog.objects.get(user=request.user, date=date_obj)
+            print(f"WorkoutLog found for date: {date_obj}")
+            workout_log.delete()
+            print(f"Successfully Deleted WorkoutLog for date: {date_obj}")
+            return Response({"message": "Workout log deleted successfully"}, status=status.HTTP_200_OK)
+        except WorkoutLog.DoesNotExist:
+            return Response({"error": "Workout log not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class PeriodDatesView(APIView):
     permission_classes = [IsAuthenticated]
 
