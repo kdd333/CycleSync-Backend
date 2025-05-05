@@ -140,9 +140,14 @@ class DeleteAccountView(APIView):
 
     def delete(self, request):
         """Delete the logged in users account"""
-        user = request.user
-        user.delete()
-        return Response({"message": "Account deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        try : 
+            user = request.user
+            user.delete()
+            print(f"User {user.email} deleted successfully")
+            return Response({"message": "Account deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(f"Error deleting user: {e}")
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ChangePasswordView(APIView):
