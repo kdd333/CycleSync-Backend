@@ -1,11 +1,12 @@
 from django.urls import path
-from .views import RegisterView, LoginView, UserDetailView, ChangePasswordView, LogoutView, WorkoutListCreateView, ExerciseListView, WorkoutDetailView, WorkoutLogView, CycleListView, PeriodDatesView, LogPeriodView, CurrentCycleView, DeleteWorkoutLogView
+from .views import RegisterView, LoginView, UserDetailView, DeleteAccountView,  ChangePasswordView, LogoutView, WorkoutListCreateView, ExerciseListView, WorkoutDetailView, WorkoutLogView, CycleListView, PeriodDatesView, LogPeriodView, CurrentCycleView, DeleteWorkoutLogView
 
 urlpatterns = [
     path('signup/', RegisterView.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('user/', UserDetailView.as_view(), name='user_detail'), 
+    path('delete-account/', DeleteAccountView.as_view(), name='delete_account'),
     path('change-password/', ChangePasswordView.as_view(), name='change_password'),
     path('workouts/', WorkoutListCreateView.as_view(), name='workouts'),
     path('workouts/<int:workout_id>/', WorkoutDetailView.as_view(), name='workout_detail'),
