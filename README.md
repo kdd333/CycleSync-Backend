@@ -68,14 +68,30 @@ The next step after activating a virtual environment is to install the required 
 ``` pip install -r requirements.txt ```
 
 
-### 4. Run Database Migrations
+### 4. Create Environment 
+
+You will need to create an environment file to set important variables for the local environment. To get started on this, create a `.env` file:
+
+``` echo. > .env ```
+
+Then open the .env file in a text editor and add the following:
+
+```
+SECRET_KEY=cyclesync_backend_secret_key
+DATABASE_URL=sqlite:///db.sqlite3
+```
+
+Make sure to save the `.env` file before moving on to the next step.
+
+
+### 5. Run Database Migrations
 
 Apply the Django migrations to set up the database schema:
 
 ``` python manage.py migrate ```
 
 
-### 5. Run the Development Server
+### 6. Run the Development Server
 
 Start the Django development server by running the command:
 
