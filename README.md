@@ -98,3 +98,8 @@ Start the Django development server by running the command:
 ``` python manage.py runserver ```
 
 You will now be able to access the backend API at http://127.0.0.1:8000/ or http://localhost:8000/ (check the terminal logs after running the command for the exact URL).
+
+
+### *Note
+
+If you would like to view debugging logs, make sure to go to the `settings.py` file (located in the `cyclesync/` directory), and find the line that says `DEBUG = False` and set this to `true`.
