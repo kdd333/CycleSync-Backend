@@ -49,7 +49,7 @@ After cloning successfully, move into the root directory by running the command:
 
 ### 2. Create and Activate a Conda Environment
 
-Make sure you have Miniconda installed for this step. Follow these instructions on how to install Miniconda: https://www.anaconda.com/docs/getting-started/miniconda/install
+Make sure you have Miniconda installed for this step. Follow these instructions on how to install Miniconda if you do not have it installed on your device: https://www.anaconda.com/docs/getting-started/miniconda/install
 
 
 After installing Miniconda, create a new environment in your terminal by running the command: 
@@ -97,7 +97,7 @@ Start the Django development server by running the command:
 
 ``` python manage.py runserver ```
 
-You will now be able to access the backend API at http://127.0.0.1:8000/ or http://localhost:8000/ (check the terminal logs after running the command for the exact URL).
+You will now be able to access the backend server at http://127.0.0.1:8000/ or http://localhost:8000/ (check the terminal logs after running the command for the exact URL).
 
 
 ### *Note
