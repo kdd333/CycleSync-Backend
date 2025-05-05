@@ -228,11 +228,13 @@ class WorkoutDetailView(APIView):
                         current_phase = phase.phase.name
                         break
 
-            # Add warning message for compound exercises during menstrual or luteal phases
+            # Add warning message for compound and heavy cardio exercises during menstrual or luteal phases
             for exercise in workout_data['workout_exercises']:
                 exercise_obj = Exercise.objects.get(id=exercise['exercise']['id'])
                 if exercise_obj.exercise_type.name == "Compound" and current_phase in ["Menstrual", "Luteal"]:
                     exercise['warning'] = f"'{exercise_obj.name}' is a compound exercise which may be more challenging during this phase. A lowered weight or fewer sets is recommended. Listen to your body."
+                elif exercise_obj.exercise_type.name == "Heavy Cardio" and current_phase in ["Menstrual", "Luteal"]:
+                    exercise['warning'] = f"'{exercise_obj.name}' is a heavy cardio exercise which may be more exhausting during this phase. Consider reducing intensity or duration. Listen to your body."
                 else:
                     exercise['warning'] = ""
 
