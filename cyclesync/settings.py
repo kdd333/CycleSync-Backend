@@ -34,7 +34,7 @@ if not SECRET_KEY:
     raise ValueError("No SECRET_KEY set for Django. Please set the SECRET_KEY environment variable.")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'cyclesync-backend-production.up.railway.app', 
@@ -73,19 +73,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 #     'http://127.0.0.1:8000',
 # ]
 
-# CORS_ALLOW_CREDENTIALS = True
 
-# CORS_ALLOW_HEADERS = [
-#     'authorization',
-#     'content-type',
-#     'x-csrftoken',
-# ]
-
-# CORS_EXPOSE_HEADERS = [
-#     'Content-Type',
-#     'X-CSRFToken',
-# ]
-
+# CSRF settings - Add backend URL server to CSRF_TRUSTED_ORIGINS if running locally 
 CSRF_TRUSTED_ORIGINS = [
     'https://cyclesync-backend-production.up.railway.app'
 ]
