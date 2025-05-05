@@ -135,6 +135,16 @@ class UserDetailView(APIView):
         return Response({"message": "User details updated successfully"}, status=status.HTTP_200_OK)
 
 
+class DeleteAccountView(APIView):
+    permission_classes = [IsAuthenticated] 
+
+    def delete(self, request):
+        """Delete the logged in users account"""
+        user = request.user
+        user.delete()
+        return Response({"message": "Account deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
 
