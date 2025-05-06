@@ -35,7 +35,7 @@ Please follow these instructions if you would like to setup the source code loca
 ### 1. **Clone the Repository**
 
 
-To get started, clone the repository to your local machine. Open your terminal or Git bash and change to the directory on your local machine where you would like to save the repository (using ```cd``` command) and run the following command:
+To get started, clone this repository to your local machine. Open your terminal or Git bash and change to the directory on your local machine where you would like to save the repository (using ```cd``` command) and run the following command:
 
 ``` git clone https://github.com/kdd333/CycleSync-Backend.git ```
 
