@@ -68,7 +68,7 @@ The next step after activating a virtual environment is to install the required 
 ``` pip install -r requirements.txt ```
 
 
-### 4. Create Environment 
+### 4. Set Environment Variables 
 
 You will need to create an environment file to set important variables for the local environment. To get started on this, create a `.env` file:
 
